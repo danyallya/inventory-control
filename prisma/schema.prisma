@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum MovementKind {
+  RECEIPT
+  SALE
+  RETURN
+  ADJUSTMENT
+}
+
+model Product {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  sku            String          @unique
+  name           String
+  collection     String
+  unitCostCents  Int
+  retailCents    Int
+  quantity       Int             @default(0)
+  reorderPoint   Int             @default(3)
+  archived       Boolean         @default(false)
+  movements      StockMovement[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model StockMovement {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  productId   String       @db.ObjectId
+  kind        MovementKind
+  quantity    Int
+  note        String?
+  product     Product      @relation(fields: [productId], references: [id])
+  createdAt   DateTime     @default(now())
+
+  @@index([productId, createdAt])
+}
