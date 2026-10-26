@@ -13,7 +13,7 @@ const initial:Item[]=[
  {name:"Bronze incense holder",sku:"OB-3340",group:"Objects",qty:31,value:"$58",initial:"BI",color:"#cbc0a9"}
 ];
 export default function Home(){
- const {dark,toggle}=useDisplayMode(); const [items,setItems]=useState(initial); const [q,setQ]=useState(""); const [filter,setFilter]=useState("All items"); const [open,setOpen]=useState(false);
+ const {dark,toggle}=useDisplayMode(); const [items,setItems]=useState(initial); const [q,setQ]=useState(""); const [filter,setFilter]=useState("All items"); const [open,setOpen]=useState(false); const [newName,setNewName]=useState(""); const [newSku,setNewSku]=useState(""); const [newQty,setNewQty]=useState("0");
  const rows=useMemo(()=>items.filter(i=>i.name.toLowerCase().includes(q.toLowerCase())&&(filter==="All items"||(filter==="Needs attention"?i.qty<=3:i.group===filter))),[items,q,filter]);
  return <Box sx={{minHeight:"100vh",display:"flex",bgcolor:"background.default"}}>
   <Box component="aside" sx={{width:{xs:0,md:226},display:{xs:"none",md:"flex"},flexDirection:"column",position:"fixed",inset:"0 auto 0 0",p:2.5,borderRight:"1px solid",borderColor:"divider",bgcolor:"background.paper"}}>
@@ -42,6 +42,6 @@ export default function Home(){
     </Box><Typography sx={{pt:2,color:"text.secondary",fontSize:9,display:"flex",justifyContent:"space-between"}}>SABLE LEDGER <span>STOCKROOM NOTES · 2026</span></Typography>
    </Box>
   </Box>
-  <Dialog open={open} onClose={()=>setOpen(false)} fullWidth maxWidth="xs"><DialogTitle sx={{fontFamily:"Georgia"}}>Add a product</DialogTitle><DialogContent><TextField autoFocus fullWidth label="Product name" margin="dense"/><TextField fullWidth label="SKU" margin="dense"/><TextField fullWidth label="Opening quantity" type="number" margin="dense"/></DialogContent><DialogActions sx={{p:2}}><Button onClick={()=>setOpen(false)}>Cancel</Button><Button variant="contained" onClick={()=>setOpen(false)}>Save product</Button></DialogActions></Dialog>
+  <Dialog open={open} onClose={()=>setOpen(false)} fullWidth maxWidth="xs"><DialogTitle sx={{fontFamily:"Georgia"}}>Add a product</DialogTitle><DialogContent><TextField autoFocus fullWidth label="Product name" margin="dense" value={newName} onChange={e=>setNewName(e.target.value)}/><TextField fullWidth label="SKU" margin="dense" value={newSku} onChange={e=>setNewSku(e.target.value)}/><TextField fullWidth label="Opening quantity" type="number" margin="dense" value={newQty} onChange={e=>setNewQty(e.target.value)}/></DialogContent><DialogActions sx={{p:2}}><Button onClick={()=>setOpen(false)}>Cancel</Button><Button variant="contained" disabled={!newName.trim()||!newSku.trim()} onClick={()=>{const label=newName.trim();setItems([{name:label,sku:newSku.trim(),group:"Objects",qty:Number(newQty)||0,value:"—",initial:label.slice(0,2).toUpperCase(),color:"#d9d2c4"},...items]);setOpen(false);setNewName("");setNewSku("");setNewQty("0");}}>Save product</Button></DialogActions></Dialog>
  </Box>;
 }
