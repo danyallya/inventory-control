@@ -7,5 +7,5 @@
 - Dependencies: generated package-lock.json and installed packages after Nexus 404s. The user approved npmjs fallback. Local .npmrc remains ignored, preserves Nexus as default and maps only required scopes. No private registry config is tracked.
 - Checks: npm test passed (1/1), npm run lint passed, npm run typecheck passed, and npm run build passed. The production build emitted the PWA manifest/service-worker shell.
 - Database setup: npm run db:generate generated Prisma Client from the local schema. No real database connection or data push was attempted.
-- GitHub: repository creation is temporarily blocked by the secondary creation limit. Local main and day-00-foundation branches are prepared; repository creation and push remain pending.
+- GitHub: Day 00 foundation commit 7d0f5a5 is pushed to both main and day-00-foundation: https://github.com/danyallya/inventory-control. Day 01 has not started.
 - Schedule: Day 01 has not started. The next task is Day 01 in BACKLOG.md; wait for the user to trigger that day.
