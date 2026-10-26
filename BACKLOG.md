@@ -7,6 +7,9 @@ Deliver an operational inventory product for independent design retail: trusted 
 Next.js/TypeScript, Material UI visual system, responsive owner dashboard, product search/category/low-stock filters, add-item dialog, theme switch, PWA shell, MongoDB Prisma schema, .npmrc ignore rule, README and daily cycle are prepared. Dashboard records are illustrative.
 
 ## Daily work
+### Day 00 validation
+Nexus returned 404 for packages used by this project. Following the user's approval, dependencies were installed with npmjs fallback. The ignored local .npmrc preserves Nexus as default and contains only required scope overrides. Tests, lint, typecheck and production build passed; Day 01 has not started.
+
 | Day | Focus | Acceptance |
 |---|---|---|
 | 01 | Baseline quality | Review foundation; install through approved registry; lint, typecheck and build pass; record responsive baseline. |
