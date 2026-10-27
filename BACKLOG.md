@@ -12,7 +12,7 @@ Nexus returned 404 for packages used by this project. Following the user's appro
 
 | Day | Focus | Acceptance |
 |---|---|---|
-| 01 | Baseline quality | Review foundation; install through approved registry; lint, typecheck and build pass; record responsive baseline. |
+| 01 | Baseline quality | Done — review foundation, check responsive/browser baseline, correct sample date, and restrict service-worker caching. Tests/lint/types/build pass. |
 | 02 | Mongo data lifecycle | Validate Prisma Mongo schema, local setup and safe sample seed strategy. |
 | 03 | Catalog reads | Add paginated product list and details backed by Prisma. |
 | 04 | Product validation | Add SKU uniqueness, money and quantity rules with clear errors. |
@@ -45,3 +45,5 @@ Nexus returned 404 for packages used by this project. Following the user's appro
 
 ## Discovery log
 Move a task only with a reason and revised acceptance. Completion means UI, data rules, tests, docs and empty/error states agree.
+
+- Day 01: Done. Browser baseline and route map are recorded in README. The fixture date was updated, and service-worker caching is restricted to the public offline shell and static assets; API and dynamic navigation responses are excluded. Day 02 is Prisma Mongo schema validation and a repeatable local setup/seed strategy.
