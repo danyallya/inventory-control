@@ -37,3 +37,7 @@ Historical Day 00/01 entries describe their original workflow. This policy super
 Movement arithmetic, threshold behavior and table interaction changes need their own descriptions and checks. Commit related invariants and regression cases together, splitting only complete independent work.
 
 Next planned scope: Day 02 — Prisma Mongo schema validation, repeatable local setup and safe synthetic seed strategy.
+
+## Contribution evidence
+
+Follow [CONTRIBUTING.md](CONTRIBUTING.md) within the existing delivery scope. Consider a synthetic movement/balance reconciliation case with units and integer-cent valuation. Keep real issue links and agreed coauthor attribution with the matching change. Profile goals do not change commit counts, review gates, day numbering or authorization for external contact/settings/payment.

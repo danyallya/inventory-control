@@ -2,7 +2,7 @@
 
 Follow [DELIVERY-POLICY.md](DELIVERY-POLICY.md). Finish this inventory repository before starting the next portfolio project; record any external blocker and exact next action first.
 
-1. Read AGENTS.md, DELIVERY-POLICY.md, BACKLOG.md, README.md and DAILY-LOG.md. Inspect status/history and reconcile the previous PR; preserve user changes.
+1. Read AGENTS.md, DELIVERY-POLICY.md, CONTRIBUTING.md, BACKLOG.md, README.md and DAILY-LOG.md. Inspect status/history and reconcile the previous PR; preserve user changes. Within actual inventory work, consider synthetic stock-reconciliation examples and genuine collaboration; record evidence without activity quotas or weaker review gates.
 2. Confirm the manually requested day. Do not advance to a later day without its trigger. Fetch and create `day-NN/<inventory-scope>` from current `origin/main`.
 3. Review prior SKU, quantity, integer-cent valuation and movement code, staff/workspace boundaries and safe caching. Reproduce relevant defects and check stale/concurrent update risks when movement logic changes.
 4. Add meaningful domain/error regression cases, implement the scoped inventory item and debug affected list/detail/filter paths.
