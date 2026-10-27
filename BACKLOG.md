@@ -47,3 +47,7 @@ Nexus returned 404 for packages used by this project. Following the user's appro
 Move a task only with a reason and revised acceptance. Completion means UI, data rules, tests, docs and empty/error states agree.
 
 - Day 01: Done. Browser baseline and route map are recorded in README. The fixture date was updated, and service-worker caching is restricted to the public offline shell and static assets; API and dynamic navigation responses are excluded. Day 02 is Prisma Mongo schema validation and a repeatable local setup/seed strategy.
+
+## Process change effective Day 02 — 2026-10-27
+
+Apply [DELIVERY-POLICY.md](DELIVERY-POLICY.md) to every remaining ticket: finish Sable Ledger before the next repository, use meaningful scope-driven commits and deliver through its own reviewed PR. A blocked external gate needs a concrete record and next action. This adds delivery gates without moving Day 02–30 product work or changing completed history.

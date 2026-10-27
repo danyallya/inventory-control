@@ -27,3 +27,7 @@ See BACKLOG.md for the 30-day product plan and DAILY_WORKFLOW.md for the recurri
 - Browser baseline: at about 727 CSS pixels wide, summary cards use a two-column layout and the inventory table scrolls horizontally. Checked the All/Needs attention filter, Add product dialog open/close and light/dark theme. The displayed fixture date was one day behind the run date and now reads Tuesday, 27 October 2026.
 - PWA cache boundary: the service worker pre-caches only `/offline`, the manifest and icon; it caches only `/_next/static/` assets and those public metadata files. API requests bypass the worker and navigation stays network-only with the offline page as fallback. Cache version `sable-shell-v2` clears the previous broad cache on activation.
 - Verification uses Vitest, ESLint, strict TypeScript, Next.js production build and Prisma Client generation. Day 01 passed `npm test` (2 files, 4 tests), `npm run lint`, `npm run typecheck`, `npm run db:generate` and `npm run build`. No MongoDB migration or real catalog data was used.
+
+## Delivery and review
+
+Sable Ledger review reconciles stock movements, quantities and integer-cent valuation, then checks staff authorization, ledger history and low-stock behavior against the same records. Follow [DELIVERY-POLICY.md](DELIVERY-POLICY.md) from Day 02 for sequential execution, scope-driven commits and this repository's separate branch/PR with GitHub panel review and merge.
