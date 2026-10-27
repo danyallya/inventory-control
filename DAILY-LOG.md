@@ -18,3 +18,11 @@
 - Checks: `npm test` passed (2 files, 4 tests); `npm run lint`, `npm run typecheck`, `npm run db:generate`, `npm run build`, and `git diff --check` passed. No MongoDB migration or real catalog data was used.
 - GitHub: implementation/docs commit `320d7f6` (`fix: constrain inventory service-worker caching`) was pushed to `day-01/baseline-quality`, fast-forwarded to `main`, and `main` was pushed. This log entry will be included in the final sync.
 - Next: Day 02 — validate the Prisma Mongo schema and document a repeatable local setup and safe sample seed strategy.
+
+## Review workflow maintenance — 2026-10-27
+
+- The user requested careful sequential project execution, commit content/counts suited to each product and an independent branch/PR per repository with panel review and merge.
+- Sable Ledger review reconciles stock movements, quantities and integer-cent valuation, then checks staff authorization, ledger history and low-stock behavior against the same records. Added a standalone delivery policy and entry points in AGENTS, README and BACKLOG.
+- Documentation-only maintenance on `docs/sable-stock-integrity`; Markdown diff reviewed and `git diff --check` used. No application tests/build rerun for this process change. Next product work: Day 02 — Prisma Mongo schema validation, repeatable local setup and safe synthetic seed strategy.
+- This is the pre-merge log state. The portfolio workspace DELIVERY-RECEIPTS.md records the actual PR URL, checked head, panel gates, merge SHA and sync afterward; reconcile it here in the next authorized update.
+- Updated DAILY_WORKFLOW.md with stock-domain review, manually requested days and the PR/panel-merge/sync completion gate; the workflow and policy form one coherent inventory-delivery update.
