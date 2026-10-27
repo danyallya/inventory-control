@@ -14,3 +14,8 @@
 - Read and follow [DELIVERY-POLICY.md](DELIVERY-POLICY.md). Finish Sable Ledger and its own PR panel review, merge and sync before the next portfolio repository, or record an exact external blocker. No concurrent project or subagent work.
 - Choose commit counts, boundaries, content and wording from this product's real changes; do not copy a fixed history pattern from other projects.
 - Review the latest pushed head and checks in GitHub and merge through this repository's PR panel. Respect required independent approvals; self-review does not replace them.
+
+## Community contribution goals — effective Day 02
+
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) at startup. Integrate its Sable Ledger examples and real collaboration opportunities into existing daily/weekly/documentation work. Preserve sequential delivery, product-specific commits and every PR gate.
+- Recognition is account-wide and externally awarded. No activity quotas, fake coauthors, manufactured issues, star exchanges or review shortcuts; record actual evidence and uncertainty.

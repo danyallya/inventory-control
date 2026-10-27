@@ -31,3 +31,7 @@ See BACKLOG.md for the 30-day product plan and DAILY_WORKFLOW.md for the recurri
 ## Delivery and review
 
 Sable Ledger review reconciles stock movements, quantities and integer-cent valuation, then checks staff authorization, ledger history and low-stock behavior against the same records. Follow [DELIVERY-POLICY.md](DELIVERY-POLICY.md) from Day 02 for sequential execution, scope-driven commits and this repository's separate branch/PR with GitHub panel review and merge.
+
+## Contributions and examples
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for reproducible reports, genuine collaboration and product examples such as a Mongo setup and inventory walkthrough without operational stock data. Contributions follow the product backlog and reviewed PR workflow.
