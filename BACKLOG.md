@@ -13,7 +13,7 @@ Nexus returned 404 for packages used by this project. Following the user's appro
 | Day | Focus | Acceptance |
 |---|---|---|
 | 01 | Baseline quality | Done — review foundation, check responsive/browser baseline, correct sample date, and restrict service-worker caching. Tests/lint/types/build pass. |
-| 02 | Mongo data lifecycle | Validate Prisma Mongo schema, local setup and safe sample seed strategy. |
+| 02 | Mongo data lifecycle | Partially verified, blocked — schema/client and local replica-set/seed tools prepared; live Mongo push/repeatability and browser/PR panel gates pending. |
 | 03 | Catalog reads | Add paginated product list and details backed by Prisma. |
 | 04 | Product validation | Add SKU uniqueness, money and quantity rules with clear errors. |
 | 05 | Create/edit products | Persist catalog changes with accessible forms and audit timestamps. |

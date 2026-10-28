@@ -34,3 +34,13 @@
 - Documentation-only scope on docs/sable-stock-examples; reviewed Markdown and git diff --check. App tests/build are not rerun because runtime behavior is unchanged.
 - External blocker: local browser use is disabled in Work settings. PR creation, panel review and merge remain pending; resume from this branch when browser access is available, inspect existing PRs first, target main and follow all gates.
 - Publication is pre-merge here; the final PR/head/panel/check/merge/sync evidence goes in the workspace DELIVERY-RECEIPTS.md after completion. Next: Day 02 — Prisma Mongo schema validation, repeatable local setup and safe synthetic seed strategy. Wait for the user's day trigger.
+
+## Day 02 — Mongo local lifecycle — 2026-10-28
+
+- Reconciled merged policy/contribution PRs #1/#2 at main c0e15e3. Reviewed Mongo ObjectIds, unique SKU, product/time index, server-only client and prior cache tests. Documented that Prisma Mongo uses schema push and replica-set transactions rather than SQL migrations.
+- Added guarded local check/push/seed commands for loopback sable_inventory_dev on rs0, without reset/data-loss flags. Synthetic product and opening RECEIPT share stable ObjectIds and four units; opening cost is 4800 integer cents. Transactional upserts preserve matching existing records. DATABASE.md defines service initialization, repeat-seed acceptance and recovery boundaries; no dependency versions changed.
+- Prisma validate/generate passed. Six tests, lint and explicit typecheck passed; final production build recorded in workspace receipt. Installed Prisma CLI entry resolution passed. Reviewed all nine changed files before this log; private .env/.npmrc and output excluded. Shareable .env.example uses only loopback fixture settings.
+- External DB blocker: no MongoDB binaries/service/listener on 27017. Explicit guarded db:check exited 1 with safe failure text. No live push, replica-set transaction or twice-run seed success is claimed. Start a local rs0 service, run check/push and seed twice to verify counts/reconciliation.
+- Separate Work browser blocker leaves PR creation/exact-head panel Files changed/Checks/conversation/merge/sync pending on day-02/sable-mongo-seed-contract. Synthetic guard/stock reconciliation tests are contribution evidence; no CI/approval/badge or operational stock claim.
+- Next: finish Day 02 DB/panel gates, then Day 03 paginated catalog reads/details on its manual trigger.
+- Final seed-boundary review additionally requires directConnection=true, preventing replica-set discovery from expanding the connection beyond the explicit loopback target. Full tests/lint rerun after this script-only correction; no application bundle imports the development script.
