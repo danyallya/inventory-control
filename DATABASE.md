@@ -18,4 +18,4 @@ Keep schema changes reviewed in Git and document data/backfill effects because M
 
 ## Observed validation — 2026-10-28
 
-No Mongo binaries/service or listener on 27017 were found. Schema/client validation and synthetic guard/valuation tests can run independently; actual schema push, replica-set transaction behavior and repeat-seed verification remain blocked until a local rs0 service exists. A ping check against the explicit development target is recorded in DAILY-LOG.md. Browser panel delivery is separately blocked by disabled Work browser access.
+No Mongo binaries/service or listener on 27017 were found. Schema/client validation and synthetic guard/valuation tests can run independently; actual schema push, replica-set transaction behavior and repeat-seed verification remain blocked until a local rs0 service exists. A ping check against the explicit development target is recorded in DAILY-LOG.md. PR #4 was reviewed in the GitHub panel on Day 02 head `5e007778dbb37480f8d6500223362acb1cb719b6`; all 10 changed files were marked Viewed, Checks showed 0 configured runs, and no base conflicts were reported. The PR remains Draft pending live database acceptance.
