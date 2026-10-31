@@ -19,3 +19,7 @@ Keep schema changes reviewed in Git and document data/backfill effects because M
 ## Observed validation — 2026-10-28
 
 No Mongo binaries/service or listener on 27017 were found. Schema/client validation and synthetic guard/valuation tests can run independently; actual schema push, replica-set transaction behavior and repeat-seed verification remain blocked until a local rs0 service exists. A ping check against the explicit development target is recorded in DAILY-LOG.md. PR #4 was reviewed in the GitHub panel on Day 02 head `5e007778dbb37480f8d6500223362acb1cb719b6`; all 10 changed files were marked Viewed, Checks showed 0 configured runs, and no base conflicts were reported. The PR remains Draft pending live database acceptance.
+
+## Recheck — 2026-10-31
+
+`mongod`, `mongosh` and `mongo` were not available, no listener was found on port 27017, and `.env` is absent. `npm run db:generate` passed, but `npm run db:validate` could not load `DATABASE_URL`; guarded `npm run db:check` exited 1 because no loopback Mongo development URL is configured. No schema push, replica-set transaction or seed run was attempted. Continue only after configuring an isolated local `sable_inventory_dev` replica set `rs0` as described above.
