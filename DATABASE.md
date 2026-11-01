@@ -30,3 +30,7 @@ No Mongo binaries/service or listener on 27017 were found. Schema/client validat
 - `npm run db:validate`, `npm run db:generate`, guarded `npm run db:check`, and guarded `npm run db:push` passed. Prisma created the Product and StockMovement collections plus the unique SKU and product/time indexes in `sable_inventory_dev`.
 - `npm run db:seed` passed twice. Direct Prisma reads confirmed exactly one synthetic product and one linked opening receipt, SKU `SAMPLE-STUDIO-CUP`, quantity 4, unit cost 1200 cents, and total opening value 4800 cents. No operational inventory was used.
 - The 2026-10-28 and 2026-10-31 unavailable-service notes above are historical; this run resolves that Day 02 acceptance gate.
+
+## Product input boundary — Day 04
+
+The preview form and shared `lib/product-validation.ts` contract trim and uppercase SKU values before checking duplicates. The local-only `GET /api/products/sku-availability?sku=...` response is `private, no-store`, reads only an identifier, and never writes. Currency is entered as non-negative USD with at most two decimals and converted exactly to integer cents; quantity and reorder point are non-negative whole units bounded to Prisma's signed `Int` range. These checks improve the session preview but are advisory for persistence: Day 05 create/edit handlers must validate the body again and handle the unique-index conflict at write time.
