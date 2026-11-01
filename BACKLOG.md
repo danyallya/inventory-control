@@ -13,7 +13,7 @@ Nexus returned 404 for packages used by this project. Following the user's appro
 | Day | Focus | Acceptance |
 |---|---|---|
 | 01 | Baseline quality | Done — review foundation, check responsive/browser baseline, correct sample date, and restrict service-worker caching. Tests/lint/types/build pass. |
-| 02 | Mongo data lifecycle | Validate Prisma Mongo schema, local setup and safe sample seed strategy. |
+| 02 | Mongo data lifecycle | Done — validated the schema, pushed it to the dedicated loopback `sable_inventory_dev` replica set, and confirmed two repeat seeds preserve one linked four-unit product/receipt fixture worth 4800 cents. |
 | 03 | Catalog reads | Add paginated product list and details backed by Prisma. |
 | 04 | Product validation | Add SKU uniqueness, money and quantity rules with clear errors. |
 | 05 | Create/edit products | Persist catalog changes with accessible forms and audit timestamps. |
@@ -47,6 +47,7 @@ Nexus returned 404 for packages used by this project. Following the user's appro
 Move a task only with a reason and revised acceptance. Completion means UI, data rules, tests, docs and empty/error states agree.
 
 - Day 01: Done. Browser baseline and route map are recorded in README. The fixture date was updated, and service-worker caching is restricted to the public offline shell and static assets; API and dynamic navigation responses are excluded. Day 02 is Prisma Mongo schema validation and a repeatable local setup/seed strategy.
+- Day 02 acceptance completed 2026-11-01: MongoDB 7.0.16 on loopback `rs0` accepted the guarded schema push and two transactional seed runs; one synthetic product and linked four-unit opening receipt remain at 4800 cents. See DATABASE.md and DAILY-LOG.md. Next: deliver Day 03 catalog reads on a fresh branch from synchronized `main`, then Day 04 product validation.
 
 ## Process change effective Day 02 — 2026-10-27
 
@@ -55,3 +56,11 @@ Apply [DELIVERY-POLICY.md](DELIVERY-POLICY.md) to every remaining ticket: finish
 ## Contribution integration — 2026-10-27
 
 Effective Day 02: apply [CONTRIBUTING.md](CONTRIBUTING.md) inside existing tickets. At already scheduled weekly reviews, assess real feedback such as a synthetic movement/balance reconciliation case with units and integer-cent valuation; at documentation/setup tickets, improve a Mongo setup and inventory walkthrough without operational stock data. Day 30 records actual contribution evidence and outstanding external dependencies. No day is renumbered and no quota or badge is a completion criterion. Next scope remains: Day 02 — Prisma Mongo schema validation, repeatable local setup and safe synthetic seed strategy.
+
+## Day 04 trigger — 2026-10-31 (blocked by Day 02)
+
+The requested Day 04 run did not start product validation work because Day 02's live Mongo replica-set/schema-push/repeat-seed acceptance remains open, and Day 03 catalog reads are still ahead of Day 04 in the existing sequence. The recheck found no MongoDB tools or listener on port 27017 and no local `.env`; see DAILY-LOG.md and DATABASE.md. Keep the Day 03 and Day 04 scopes and numbering unchanged. Next: provide an isolated local `rs0`, run the guarded schema check/push and seed twice, complete the pending Day 03 catalog-read scope on its own manual trigger, then resume Day 04 when requested.
+
+## Day 04 trigger resumed — 2026-11-01
+
+The prior Day 04 blocker is historical: the Day 02 Mongo acceptance has now passed, but Day 03 catalog reads still precede product validation. Complete Day 03 through its own branch, PR and merge before starting Day 04. Preserve this schedule and Day 30 target.
