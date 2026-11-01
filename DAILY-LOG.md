@@ -81,3 +81,9 @@
 - Contribution fit: no new issue or collaborator was warranted; no outreach or activity quota was introduced. Existing movement invariant Issue #3 remains for its planned movement/atomic-write scope; cache-boundary Issue #5 will be checked against its fix before deciding whether it can close.
 - Delivery status before commit: Day 04 implementation/local acceptance are complete; diff review, `git diff --check`, final verification, push, PR panel review and merge remain pending. Day 05 stays manual.
 - Next: finish the Day 04 exact-head PR gate; then, in README order, continue other outstanding Day 1–4 work and gates. Do not advance to Day 05 until all Day 04 project scopes are either merged or have a specific unresolved external blocker.
+
+## Review follow-up — Day 01 service-worker cache ownership — 2026-11-01
+
+- Reconciled open Issue #5 against `main`: the activation handler still deleted every origin Cache Storage entry except the current Sable cache, so the acceptance criteria were not met. On `fix/service-worker-owned-cache-cleanup`, restricted deletion to older `sable-shell-*` entries and added a regression asserting that an unrelated app cache survives and `clients.claim()` runs.
+- `npm test` passed (6 files / 19 tests), `npm run lint`, `npm run typecheck`, `npm run build`, and `git diff --check` passed. No live cache loss was observed; this is a preventive isolation fix.
+- PR/panel review/merge are pending. Keep Issue #5 open until the fix's PR is merged. Issue #3 remains open for the planned Day 09 atomic stock movement work.
