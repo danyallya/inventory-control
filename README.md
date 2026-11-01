@@ -22,8 +22,8 @@ See BACKLOG.md for the 30-day product plan and DAILY_WORKFLOW.md for the recurri
 
 ## Day 01 baseline and route map
 
-- The current workspace preview is `/`; the existing operational route is `GET /api/health`, and `/offline` is the static offline fallback. Product, movement, supplier and order APIs are not implemented yet.
-- Product rows, stock figures and charts are illustrative records. The Add product dialog updates only the current browser session; it does not write to MongoDB.
+- The overview preview is `/`; `GET /api/health` reports service status and `/offline` is the static offline fallback. The local-only `/catalog` preview reads paginated products from `GET /api/products` and details from `GET /api/products/[id]`. These catalog routes return 404 outside `next dev` or when `DATABASE_URL` is not the guarded loopback `sable_inventory_dev`/`rs0` target.
+- The overview's summary cards, movement chart and Add product dialog remain illustrative/session-only and do not write to MongoDB. The catalog list exposes retail price and quantity but omits unit cost, uses private no-store responses, and shows only unarchived records. Production access still requires staff authentication and authorization.
 - Browser baseline: at about 727 CSS pixels wide, summary cards use a two-column layout and the inventory table scrolls horizontally. Checked the All/Needs attention filter, Add product dialog open/close and light/dark theme. The displayed fixture date was one day behind the run date and now reads Tuesday, 27 October 2026.
 - PWA cache boundary: the service worker pre-caches only `/offline`, the manifest and icon; it caches only `/_next/static/` assets and those public metadata files. API requests bypass the worker and navigation stays network-only with the offline page as fallback. Cache version `sable-shell-v2` clears the previous broad cache on activation.
 - Verification uses Vitest, ESLint, strict TypeScript, Next.js production build and Prisma Client generation. Day 01 passed `npm test` (2 files, 4 tests), `npm run lint`, `npm run typecheck`, `npm run db:generate` and `npm run build`. No MongoDB migration or real catalog data was used.

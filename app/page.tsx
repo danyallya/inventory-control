@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import NextLink from "next/link";
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material";
 import { FiArchive, FiArrowUpRight, FiBell, FiBox, FiChevronDown, FiDownload, FiGrid, FiMoon, FiPlus, FiSearch, FiSun, FiTrendingUp } from "react-icons/fi";
 import { useDisplayMode } from "./providers";
@@ -25,7 +26,7 @@ export default function Home(){
   <Box component="main" sx={{ml:{xs:0,md:"226px"},width:"100%",minWidth:0}}>
    <Stack component="header" direction="row" justifyContent="space-between" alignItems="center" sx={{height:66,px:{xs:2,md:4},bgcolor:"background.paper",borderBottom:"1px solid",borderColor:"divider"}}>
     <Typography sx={{fontSize:11,color:"text.secondary"}}>Merchant workspace <Box component="span" sx={{mx:1,color:"divider"}}>/</Box><Box component="b" sx={{color:"text.primary",fontWeight:500}}>Overview</Box></Typography>
-    <Stack direction="row" spacing={1} alignItems="center"><IconButton size="small"><FiBell/></IconButton><IconButton size="small" onClick={toggle} aria-label="Toggle color theme">{dark?<FiSun/>:<FiMoon/>}</IconButton><Box sx={{width:28,height:28,borderRadius:"50%",bgcolor:"#e9e2d5",color:"#5a4a32",display:"grid",placeItems:"center",fontSize:9}}>JM</Box></Stack>
+    <Stack direction="row" spacing={1} alignItems="center">{process.env.NODE_ENV !== "production" && <Button component={NextLink} href="/catalog" size="small" startIcon={<FiBox/>} aria-label="Open inventory catalog" sx={{minWidth:{xs:36,sm:88},px:{xs:.5,sm:1},fontSize:10}}><Box component="span" sx={{display:{xs:"none",sm:"inline"}}}>Catalog</Box></Button>}<IconButton size="small" sx={{display:{xs:"none",sm:"inline-flex"}}}><FiBell/></IconButton><IconButton size="small" onClick={toggle} aria-label="Toggle color theme">{dark?<FiSun/>:<FiMoon/>}</IconButton><Box sx={{width:28,height:28,borderRadius:"50%",bgcolor:"#e9e2d5",color:"#5a4a32",display:"grid",placeItems:"center",fontSize:9}}>JM</Box></Stack>
    </Stack>
    <Box sx={{maxWidth:1400,mx:"auto",p:{xs:2,md:4}}}>
     <Stack direction={{xs:"column",sm:"row"}} justifyContent="space-between" alignItems={{xs:"stretch",sm:"end"}} spacing={2} sx={{mb:3}}><Box><Typography sx={{fontSize:9,letterSpacing:1.6,color:"text.secondary"}}>TUESDAY, 27 OCTOBER 2026</Typography><Typography variant="h1" sx={{fontFamily:"Georgia",fontSize:{xs:31,md:39},fontWeight:400,mt:1}}>A considered view<br/><Box component="em" sx={{color:"primary.main",fontWeight:400}}>of your stock.</Box></Typography><Typography sx={{fontSize:11,color:"text.secondary",mt:1}}>Your shelves are in good shape. Here is the detail behind today&apos;s trade.</Typography></Box><Button variant="contained" startIcon={<FiPlus/>} onClick={()=>setOpen(true)} sx={{alignSelf:{xs:"start",sm:"auto"},px:2,bgcolor:"#292f31"}}>Add product</Button></Stack>
