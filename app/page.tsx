@@ -1,10 +1,12 @@
 "use client";
 import { useMemo, useState } from "react";
 import NextLink from "next/link";
-import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Chip, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material";
 import { FiArchive, FiArrowUpRight, FiBell, FiBox, FiChevronDown, FiDownload, FiGrid, FiMoon, FiPlus, FiSearch, FiSun, FiTrendingUp } from "react-icons/fi";
+import { AddProductDialog } from "@/components/add-product-dialog";
+import type { ValidatedProductDraft } from "@/lib/product-validation";
 import { useDisplayMode } from "./providers";
-type Item={name:string;sku:string;group:string;qty:number;value:string;initial:string;color:string};
+type Item={name:string;sku:string;group:string;qty:number;value:string;initial:string;color:string;reorderPoint?:number;unitCostCents?:number;retailCents?:number};
 const initial:Item[]=[
  {name:"Sculpted stone vessel",sku:"ST-2041",group:"Objects",qty:24,value:"$148",initial:"SV",color:"#d9d2c4"},
  {name:"Linen throw, oat",sku:"TX-1188",group:"Textiles",qty:8,value:"$96",initial:"LT",color:"#d8c9b9"},
@@ -13,9 +15,11 @@ const initial:Item[]=[
  {name:"Woven market basket",sku:"AC-5512",group:"Accessories",qty:2,value:"$64",initial:"WB",color:"#dfc9b2"},
  {name:"Bronze incense holder",sku:"OB-3340",group:"Objects",qty:31,value:"$58",initial:"BI",color:"#cbc0a9"}
 ];
+function isBelowReorder(item: Item) { return item.qty <= (item.reorderPoint ?? 3); }
+function formatRetail(cents: number) { return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100); }
 export default function Home(){
- const {dark,toggle}=useDisplayMode(); const [items,setItems]=useState(initial); const [q,setQ]=useState(""); const [filter,setFilter]=useState("All items"); const [open,setOpen]=useState(false); const [newName,setNewName]=useState(""); const [newSku,setNewSku]=useState(""); const [newQty,setNewQty]=useState("0");
- const rows=useMemo(()=>items.filter(i=>i.name.toLowerCase().includes(q.toLowerCase())&&(filter==="All items"||(filter==="Needs attention"?i.qty<=3:i.group===filter))),[items,q,filter]);
+ const {dark,toggle}=useDisplayMode(); const [items,setItems]=useState(initial); const [q,setQ]=useState(""); const [filter,setFilter]=useState("All items"); const [open,setOpen]=useState(false);
+ const rows=useMemo(()=>items.filter(i=>i.name.toLowerCase().includes(q.toLowerCase())&&(filter==="All items"||(filter==="Needs attention"?isBelowReorder(i):i.group===filter))),[items,q,filter]);
  return <Box sx={{minHeight:"100vh",display:"flex",bgcolor:"background.default"}}>
   <Box component="aside" sx={{width:{xs:0,md:226},display:{xs:"none",md:"flex"},flexDirection:"column",position:"fixed",inset:"0 auto 0 0",p:2.5,borderRight:"1px solid",borderColor:"divider",bgcolor:"background.paper"}}>
    <Stack direction="row" spacing={1.2} alignItems="center" sx={{mb:5,px:.6}}><Box sx={{width:36,height:36,bgcolor:"#252c30",color:"#e5c78d",display:"grid",placeItems:"center",borderRadius:1,fontFamily:"Georgia",fontSize:22}}>S</Box><Box><Typography sx={{fontFamily:"Georgia",letterSpacing:2,fontSize:13,fontWeight:700}}>SABLE</Typography><Typography sx={{fontSize:8,letterSpacing:1.8,color:"text.secondary"}}>STOCKROOM</Typography></Box></Stack>
@@ -36,13 +40,33 @@ export default function Home(){
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{p:2,borderBottom:"1px solid",borderColor:"divider"}}><Box><Typography sx={{fontFamily:"Georgia",fontSize:19}}>Inventory</Typography><Typography sx={{fontSize:9,color:"text.secondary",mt:.4}}>Thoughtful objects, accounted for.</Typography></Box><Button size="small" startIcon={<FiDownload/>}>Export</Button></Stack>
       <Stack direction={{xs:"column",sm:"row"}} justifyContent="space-between" spacing={1} sx={{p:1.5}}><Stack direction="row" spacing={.5} sx={{overflowX:"auto"}}>{["All items","Needs attention","Objects","Textiles"].map(f=><Button key={f} onClick={()=>setFilter(f)} size="small" variant={filter===f?"contained":"text"} sx={{whiteSpace:"nowrap",fontSize:9}}>{f}</Button>)}</Stack><TextField size="small" placeholder="Search products" value={q} onChange={e=>setQ(e.target.value)} InputProps={{startAdornment:<InputAdornment position="start"><FiSearch size={14}/></InputAdornment>}} sx={{minWidth:{sm:190},"& input":{fontSize:10,p:1}}}/></Stack>
       <Box sx={{overflowX:"auto"}}><Box sx={{minWidth:620}}><Stack direction="row" sx={{px:2,py:1,color:"text.secondary",fontSize:9,borderBottom:"1px solid",borderColor:"divider"}}><Box sx={{flex:3}}>PRODUCT</Box><Box sx={{flex:1}}>SKU</Box><Box sx={{flex:1}}>ON HAND</Box><Box sx={{flex:1}}>RETAIL</Box><Box sx={{width:110}}>STATUS</Box></Stack>
-      {rows.map((p)=><Stack key={p.sku} direction="row" alignItems="center" sx={{px:2,py:1.3,minHeight:58,borderBottom:"1px solid",borderColor:"divider",fontSize:10}}><Stack direction="row" spacing={1} alignItems="center" sx={{flex:3,minWidth:0}}><Box sx={{width:34,height:34,flex:"0 0 34px",display:"grid",placeItems:"center",bgcolor:p.color,borderRadius:1,color:"#393633",fontSize:9}}>{p.initial}</Box><Box sx={{minWidth:0}}><Typography sx={{fontSize:10,fontWeight:600,whiteSpace:"nowrap"}}>{p.name}</Typography><Typography sx={{fontSize:9,color:"text.secondary"}}>{p.group}</Typography></Box></Stack><Box sx={{flex:1,color:"text.secondary"}}>{p.sku}</Box><Box sx={{flex:1,fontWeight:600}}>{p.qty}</Box><Box sx={{flex:1}}>{p.value}</Box><Box sx={{width:110}}><Chip size="small" label={p.qty<=3?"Reorder":"In stock"} color={p.qty<=3?"warning":"success"} variant="outlined" sx={{height:23,fontSize:8}}/></Box></Stack>)}{rows.length===0&&<Typography sx={{p:3,textAlign:"center",color:"text.secondary",fontSize:11}}>No products found.</Typography>}</Box></Box>
+      {rows.map((p)=><Stack key={p.sku} direction="row" alignItems="center" sx={{px:2,py:1.3,minHeight:58,borderBottom:"1px solid",borderColor:"divider",fontSize:10}}><Stack direction="row" spacing={1} alignItems="center" sx={{flex:3,minWidth:0}}><Box sx={{width:34,height:34,flex:"0 0 34px",display:"grid",placeItems:"center",bgcolor:p.color,borderRadius:1,color:"#393633",fontSize:9}}>{p.initial}</Box><Box sx={{minWidth:0}}><Typography sx={{fontSize:10,fontWeight:600,whiteSpace:"nowrap"}}>{p.name}</Typography><Typography sx={{fontSize:9,color:"text.secondary"}}>{p.group}</Typography></Box></Stack><Box sx={{flex:1,color:"text.secondary"}}>{p.sku}</Box><Box sx={{flex:1,fontWeight:600}}>{p.qty}</Box><Box sx={{flex:1}}>{p.value}</Box><Box sx={{width:110}}><Chip size="small" label={isBelowReorder(p)?"Reorder":"In stock"} color={isBelowReorder(p)?"warning":"success"} variant="outlined" sx={{height:23,fontSize:8}}/></Box></Stack>)}{rows.length===0&&<Typography sx={{p:3,textAlign:"center",color:"text.secondary",fontSize:11}}>No products found.</Typography>}</Box></Box>
      </Paper>
      <Stack spacing={1.5}><Paper elevation={0} sx={{p:2,border:"1px solid",borderColor:"divider"}}><Stack direction="row" justifyContent="space-between"><Box><Typography sx={{fontFamily:"Georgia",fontSize:18}}>Stock movement</Typography><Typography sx={{fontSize:9,color:"text.secondary",mt:.5}}>Items received and sold</Typography></Box><IconButton size="small"><FiChevronDown/></IconButton></Stack><Stack direction="row" alignItems="end" justifyContent="space-between" sx={{height:145,mt:2,px:1,borderBottom:"1px solid",borderColor:"divider"}}>{[48,62,44,77,55,90,70,64,84,59,73,96].map((h,i)=><Box key={i} sx={{width:"5%",height:h+"%",bgcolor:i===11?"primary.main":"rgba(169,130,67,.25)",borderRadius:"3px 3px 0 0"}}/>)}</Stack><Stack direction="row" justifyContent="space-between" sx={{pt:1,fontSize:8,color:"text.secondary"}}><span>01 Oct</span><span>08 Oct</span><span>15 Oct</span><span>27 Oct</span></Stack></Paper>
-     <Paper elevation={0} sx={{p:2,border:"1px solid",borderColor:"divider"}}><Stack direction="row" spacing={1} alignItems="center"><Box sx={{width:31,height:31,borderRadius:"50%",bgcolor:"rgba(177,102,78,.12)",color:"#b1664e",display:"grid",placeItems:"center"}}><FiTrendingUp/></Box><Box><Typography sx={{fontFamily:"Georgia",fontSize:16}}>Reorder soon</Typography><Typography sx={{fontSize:9,color:"text.secondary"}}>5 pieces need a closer look</Typography></Box></Stack>{items.filter(p=>p.qty<=3).map(p=><Stack key={p.sku} direction="row" justifyContent="space-between" sx={{mt:1.4,fontSize:10}}><span>{p.name}</span><b style={{color:"#b1664e"}}>{p.qty} left</b></Stack>)}<Button size="small" sx={{mt:1.5,fontSize:9}}>Review purchase list <FiArrowUpRight/></Button></Paper></Stack>
+     <Paper elevation={0} sx={{p:2,border:"1px solid",borderColor:"divider"}}><Stack direction="row" spacing={1} alignItems="center"><Box sx={{width:31,height:31,borderRadius:"50%",bgcolor:"rgba(177,102,78,.12)",color:"#b1664e",display:"grid",placeItems:"center"}}><FiTrendingUp/></Box><Box><Typography sx={{fontFamily:"Georgia",fontSize:16}}>Reorder soon</Typography><Typography sx={{fontSize:9,color:"text.secondary",mt:.3}}>{items.filter(isBelowReorder).length} products need a closer look</Typography></Box></Stack>{items.filter(isBelowReorder).map(p=><Stack key={p.sku} direction="row" justifyContent="space-between" sx={{mt:1.4,fontSize:10}}><span>{p.name}</span><b style={{color:"#b1664e"}}>{p.qty} left</b></Stack>)}<Button size="small" sx={{mt:1.5,fontSize:9}}>Review purchase list <FiArrowUpRight/></Button></Paper></Stack>
     </Box><Typography sx={{pt:2,color:"text.secondary",fontSize:9,display:"flex",justifyContent:"space-between"}}>SABLE LEDGER <span>STOCKROOM NOTES · 2026</span></Typography>
    </Box>
   </Box>
-  <Dialog open={open} onClose={()=>setOpen(false)} fullWidth maxWidth="xs"><DialogTitle sx={{fontFamily:"Georgia"}}>Add a product</DialogTitle><DialogContent><TextField autoFocus fullWidth label="Product name" margin="dense" value={newName} onChange={e=>setNewName(e.target.value)}/><TextField fullWidth label="SKU" margin="dense" value={newSku} onChange={e=>setNewSku(e.target.value)}/><TextField fullWidth label="Opening quantity" type="number" margin="dense" value={newQty} onChange={e=>setNewQty(e.target.value)}/></DialogContent><DialogActions sx={{p:2}}><Button onClick={()=>setOpen(false)}>Cancel</Button><Button variant="contained" disabled={!newName.trim()||!newSku.trim()} onClick={()=>{const label=newName.trim();setItems([{name:label,sku:newSku.trim(),group:"Objects",qty:Number(newQty)||0,value:"—",initial:label.slice(0,2).toUpperCase(),color:"#d9d2c4"},...items]);setOpen(false);setNewName("");setNewSku("");setNewQty("0");}}>Save product</Button></DialogActions></Dialog>
+  <AddProductDialog
+    open={open}
+    existingSkus={items.map((item) => item.sku)}
+    onClose={() => setOpen(false)}
+    onSave={(product: ValidatedProductDraft) => {
+      const name = product.name;
+      setItems((current) => [{
+        name,
+        sku: product.sku,
+        group: product.collection,
+        qty: product.quantity,
+        value: formatRetail(product.retailCents),
+        initial: name.slice(0, 2).toUpperCase(),
+        color: "#d9d2c4",
+        reorderPoint: product.reorderPoint,
+        unitCostCents: product.unitCostCents,
+        retailCents: product.retailCents,
+      }, ...current]);
+      setOpen(false);
+    }}
+  />
  </Box>;
 }
