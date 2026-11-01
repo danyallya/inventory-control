@@ -23,3 +23,10 @@ No Mongo binaries/service or listener on 27017 were found. Schema/client validat
 ## Recheck — 2026-10-31
 
 `mongod`, `mongosh` and `mongo` were not available, no listener was found on port 27017, and `.env` is absent. `npm run db:generate` passed, but `npm run db:validate` could not load `DATABASE_URL`; guarded `npm run db:check` exited 1 because no loopback Mongo development URL is configured. No schema push, replica-set transaction or seed run was attempted. Continue only after configuring an isolated local `sable_inventory_dev` replica set `rs0` as described above.
+
+## Local acceptance completed — 2026-11-01
+
+- Used MongoDB 7.0.16 bound to `127.0.0.1` with replica set `rs0` and a disposable local data directory. The ignored `.env` was copied from `.env.example`; `git check-ignore .env` confirmed it is not publishable.
+- `npm run db:validate`, `npm run db:generate`, guarded `npm run db:check`, and guarded `npm run db:push` passed. Prisma created the Product and StockMovement collections plus the unique SKU and product/time indexes in `sable_inventory_dev`.
+- `npm run db:seed` passed twice. Direct Prisma reads confirmed exactly one synthetic product and one linked opening receipt, SKU `SAMPLE-STUDIO-CUP`, quantity 4, unit cost 1200 cents, and total opening value 4800 cents. No operational inventory was used.
+- The 2026-10-28 and 2026-10-31 unavailable-service notes above are historical; this run resolves that Day 02 acceptance gate.

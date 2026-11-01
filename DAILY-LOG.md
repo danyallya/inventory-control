@@ -52,3 +52,11 @@
 - Checks on the current branch: `npm test` passed (3 files, 6 tests), `npm run lint` passed, `npm run typecheck` passed, `npm run db:generate` passed, and `npm run build` passed. `npm run db:validate` exited 1 because `DATABASE_URL` is unavailable. These local checks do not substitute for live Mongo acceptance.
 - Contribution fit: no new contribution issue or collaboration was warranted while the database gate is unavailable; the existing synthetic movement/balance example remains in scope for its planned work.
 - Next: start an isolated MongoDB replica set `rs0` on loopback, configure the ignored `.env` for `sable_inventory_dev`, run guarded check/push and seed twice, then complete Day 03 catalog reads before resuming Day 04 on a later manual trigger. Preserve PR #4 and review its updated pushed head before ending this run.
+
+## Day 02 acceptance resume — 2026-11-01
+
+- Reconciled the prior Draft PR #4 and its Day 02 blocker before any later Sable scope. The existing `day-02/sable-mongo-seed-contract` branch remains based on `main`; its current pushed predecessor was `81492797b0bae7eff653eabd87a526f225e1c47d`.
+- Verified the Mongo service was MongoDB 7.0.16, bound only to loopback with replica set `rs0` and a disposable local data directory. Created ignored `.env` from the shareable sample and confirmed `.env` is ignored.
+- Live acceptance passed: `npm run db:validate`, `npm run db:generate`, `npm run db:check`, `npm run db:push`, and two `npm run db:seed` runs. Prisma created the expected collections and indexes. Direct Prisma reads confirmed one product and one linked opening receipt, quantity 4, unit cost 1200 cents, total 4800 cents.
+- Regression/build checks passed: 3 files / 6 tests, lint, typecheck and production build. No UI changed in Day 02; the new work is database tooling and docs. No operational stock, remote database or production credentials were used.
+- The historical 2026-10-31 Day 04 block is resolved at its database prerequisite; Day 03 catalog reads still precede Day 04. Existing PR #4 needs its updated head reviewed and merged before creating a fresh Day 03 branch. The workspace delivery receipt will record the final panel merge outcome.
