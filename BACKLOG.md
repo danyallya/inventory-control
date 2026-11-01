@@ -14,7 +14,7 @@ Nexus returned 404 for packages used by this project. Following the user's appro
 |---|---|---|
 | 01 | Baseline quality | Done — review foundation, check responsive/browser baseline, correct sample date, and restrict service-worker caching. Tests/lint/types/build pass. |
 | 02 | Mongo data lifecycle | Done — validated the schema, pushed it to the dedicated loopback `sable_inventory_dev` replica set, and confirmed two repeat seeds preserve one linked four-unit product/receipt fixture worth 4800 cents. |
-| 03 | Catalog reads | Add paginated product list and details backed by Prisma. |
+| 03 | Catalog reads | Implementation and local acceptance complete; PR review/merge pending — local-only paginated catalog and product details backed by Prisma, with loading, error, empty and responsive states. |
 | 04 | Product validation | Add SKU uniqueness, money and quantity rules with clear errors. |
 | 05 | Create/edit products | Persist catalog changes with accessible forms and audit timestamps. |
 | 06 | Search/filter | Make filters server-backed, composable and URL-shareable. |
@@ -48,6 +48,7 @@ Move a task only with a reason and revised acceptance. Completion means UI, data
 
 - Day 01: Done. Browser baseline and route map are recorded in README. The fixture date was updated, and service-worker caching is restricted to the public offline shell and static assets; API and dynamic navigation responses are excluded. Day 02 is Prisma Mongo schema validation and a repeatable local setup/seed strategy.
 - Day 02 acceptance completed 2026-11-01: MongoDB 7.0.16 on loopback `rs0` accepted the guarded schema push and two transactional seed runs; one synthetic product and linked four-unit opening receipt remain at 4800 cents. See DATABASE.md and DAILY-LOG.md. Next: deliver Day 03 catalog reads on a fresh branch from synchronized `main`, then Day 04 product validation.
+- Day 03 implementation and local acceptance completed 2026-11-01 on `day-03/catalog-reads`: paginated list/detail reads are available only in development against the guarded loopback database, and production smoke returned 404 for `/catalog` and both APIs. Tests, lint, typecheck, build and desktop light/dark browser review passed. PR delivery remains pending; see DAILY-LOG.md. Next: finish the exact-head PR gate, merge and sync before Day 04.
 
 ## Process change effective Day 02 — 2026-10-27
 
