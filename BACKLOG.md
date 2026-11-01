@@ -46,6 +46,8 @@ Nexus returned 404 for packages used by this project. Following the user's appro
 ## Discovery log
 Move a task only with a reason and revised acceptance. Completion means UI, data rules, tests, docs and empty/error states agree.
 
+- Review follow-up for Day 01 Issue #5: fixed service-worker activation to delete only older `sable-shell-*` caches, preserving unrelated Cache Storage entries; added a regression test for unrelated cache preservation and `clients.claim()`. The fix is delivered separately from the completed Day 04 PR; close Issue #5 only after its dedicated PR is merged.
+
 - Day 01: Done. Browser baseline and route map are recorded in README. The fixture date was updated, and service-worker caching is restricted to the public offline shell and static assets; API and dynamic navigation responses are excluded. Day 02 is Prisma Mongo schema validation and a repeatable local setup/seed strategy.
 - Day 02 acceptance completed 2026-11-01: MongoDB 7.0.16 on loopback `rs0` accepted the guarded schema push and two transactional seed runs; one synthetic product and linked four-unit opening receipt remain at 4800 cents. See DATABASE.md and DAILY-LOG.md. Next: deliver Day 03 catalog reads on a fresh branch from synchronized `main`, then Day 04 product validation.
 - Day 03 completed 2026-11-01: PR #6 merged to `main` with merge commit `5fb458564e932d29a1c3c859f5b3456794e3afe4`; local `main` is synchronized. The local-only paginated catalog and product details remain behind the guarded loopback database; see the workspace receipt and DAILY-LOG.md.

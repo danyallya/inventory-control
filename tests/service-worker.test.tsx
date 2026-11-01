@@ -32,10 +32,27 @@ function createServiceWorkerHarness() {
   const source = readFileSync(new URL("../public/sw.js", import.meta.url), "utf8");
 
   runInNewContext(source, { self, caches, fetch, URL, Response });
-  return { listeners, cache, caches, fetch };
+  return { listeners, cache, caches, fetch, self };
 }
 
 describe("inventory service worker cache boundary", () => {
+  it("removes only old Sable caches and claims clients on activation", async () => {
+    const { listeners, caches, self } = createServiceWorkerHarness();
+    caches.keys.mockResolvedValue([
+      "sable-shell-v1",
+      "sable-shell-v2",
+      "another-app-offline-v1",
+    ]);
+    const waitUntil = vi.fn<(promise: Promise<unknown>) => void>();
+
+    listeners.get("activate")?.({ waitUntil });
+    await waitUntil.mock.calls[0][0];
+
+    expect(caches.delete).toHaveBeenCalledTimes(1);
+    expect(caches.delete).toHaveBeenCalledWith("sable-shell-v1");
+    expect(self.clients.claim).toHaveBeenCalledOnce();
+  });
+
   it("pre-caches only the offline shell and public app metadata", async () => {
     const { listeners, cache, caches } = createServiceWorkerHarness();
     const waitUntil = vi.fn<(promise: Promise<unknown>) => void>();
