@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { productSkuSchema, validateProductDraft } from "@/lib/product-validation";
+import { productSkuSchema, validateProductDraft, validateProductEditDraft } from "@/lib/product-validation";
 
 const validDraft = {
   name: "Studio cup",
@@ -76,5 +76,27 @@ describe("product input validation", () => {
   it("shares SKU canonicalization rules with server availability checks", () => {
     expect(productSkuSchema.parse(" st-2041 ")).toBe("ST-2041");
     expect(productSkuSchema.safeParse("ST--2041").success).toBe(false);
+  });
+});
+
+describe("product edit validation", () => {
+  const editDraft = { name: "Studio vessel", sku: "VASE-1", collection: "Objects", retailPrice: "29.95", reorderPoint: "4" };
+
+  it("normalizes an unchanged SKU and converts retail price without accepting stock quantity", () => {
+    expect(validateProductEditDraft({ ...editDraft, sku: " vase-1 " }, ["VASE-1"], "VASE-1")).toEqual({
+      success: true,
+      data: { ...editDraft, sku: "VASE-1", retailCents: 2995 },
+    });
+  });
+
+  it("rejects another product's SKU and invalid reorder points", () => {
+    expect(validateProductEditDraft(editDraft, ["VASE-1", "OTHER-1"], "VASE-1")).toEqual({
+      success: false,
+      errors: { sku: "A product with this SKU already exists." },
+    });
+    expect(validateProductEditDraft({ ...editDraft, reorderPoint: "-2" }, [], "VASE-1")).toMatchObject({
+      success: false,
+      errors: { reorderPoint: expect.any(String) },
+    });
   });
 });

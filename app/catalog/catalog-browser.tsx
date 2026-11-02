@@ -24,6 +24,7 @@ import {
   Typography,
 } from "@mui/material";
 import { FiArrowLeft, FiMoon, FiSun, FiX } from "react-icons/fi";
+import { EditProductDialog } from "@/components/edit-product-dialog";
 import { useDisplayMode } from "../providers";
 
 const PAGE_SIZE = 8;
@@ -36,6 +37,8 @@ type Product = {
   retailCents: number;
   quantity: number;
   reorderPoint: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type ProductPage = {
@@ -63,6 +66,7 @@ export function CatalogBrowser() {
   const [detail, setDetail] = useState<Product | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -145,7 +149,7 @@ export function CatalogBrowser() {
           Product catalog
         </Typography>
         <Typography sx={{ mb: 3, color: "text.secondary", fontSize: 12 }}>
-          A read-only local preview of the catalog in the development database.
+          Development catalog records with local create and edit access.
         </Typography>
 
         {loading && (
@@ -279,10 +283,23 @@ export function CatalogBrowser() {
                 <Paper variant="outlined" sx={{ flex: 1, p: 1.5 }}><Typography sx={{ color: "text.secondary", fontSize: 10 }}>Retail price</Typography><Typography sx={{ mt: 0.5, fontSize: 20 }}>{formatPrice(detail.retailCents)}</Typography></Paper>
               </Stack>
               <Typography sx={{ color: "text.secondary", fontSize: 10 }}>Unit cost is not included in the catalog preview.</Typography>
+              <Typography sx={{ color: "text.secondary", fontSize: 10 }}>Created {new Date(detail.createdAt).toLocaleString()} · Updated {new Date(detail.updatedAt).toLocaleString()}</Typography>
+              <Button variant="contained" onClick={() => setEditOpen(true)} sx={{ alignSelf: "flex-start" }}>Edit product</Button>
             </Stack>
           )}
         </DialogContent>
       </Dialog>
+      {detail && <EditProductDialog
+        key={detail.id}
+        product={detail}
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        onSaved={() => {
+          setEditOpen(false);
+          closeDetails();
+          setRetry((value) => value + 1);
+        }}
+      />}
     </Box>
   );
 }

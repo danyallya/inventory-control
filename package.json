@@ -14,7 +14,8 @@
     "test": "vitest run",
     "db:validate": "prisma validate",
     "db:check": "node scripts/local-mongo.mjs check",
-    "db:seed": "node scripts/local-mongo.mjs seed"
+    "db:seed": "node scripts/local-mongo.mjs seed",
+    "api:verify-product-writes": "node scripts/verify-product-writes.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
