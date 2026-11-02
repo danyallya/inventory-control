@@ -22,6 +22,8 @@ const product = {
   retailCents: 2800,
   quantity: 4,
   reorderPoint: 3,
+  createdAt: "2026-11-01T00:00:00.000Z",
+  updatedAt: "2026-11-01T00:00:00.000Z",
 };
 
 beforeEach(() => {

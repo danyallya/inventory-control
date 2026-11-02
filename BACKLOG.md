@@ -15,8 +15,8 @@ Nexus returned 404 for packages used by this project. Following the user's appro
 | 01 | Baseline quality | Done — review foundation, check responsive/browser baseline, correct sample date, and restrict service-worker caching. Tests/lint/types/build pass. |
 | 02 | Mongo data lifecycle | Done — validated the schema, pushed it to the dedicated loopback `sable_inventory_dev` replica set, and confirmed two repeat seeds preserve one linked four-unit product/receipt fixture worth 4800 cents. |
 | 03 | Catalog reads | Done — local-only paginated catalog and product details, responsive loading/error/empty states; PR #6 merged to `main` at `5fb458564e932d29a1c3c859f5b3456794e3afe4`. |
-| 04 | Product validation | Implementation and local acceptance complete; PR review/merge pending — normalize/uniquely check SKUs, parse non-negative USD amounts into integer cents, and accept only bounded whole-unit quantities with field-level errors. Persistent create/edit remains Day 05. |
-| 05 | Create/edit products | Persist catalog changes with accessible forms and audit timestamps. |
+| 04 | Product validation | Complete — PR #7 merged; normalize/uniquely check SKUs, parse non-negative USD amounts into integer cents, and accept bounded whole-unit quantities with field-level errors. The service-worker-owned-cache follow-up merged via PR #8 and closed Issue #5. |
+| 05 | Create/edit products | Implementation and local acceptance complete; PR/panel delivery pending — persist products through local-only POST/PATCH routes, create opening receipts transactionally, protect SKU uniqueness at the database index, preserve on-hand quantity during edits, and expose created/updated timestamps. Staff authentication and stock movement editing stay on their scheduled days. |
 | 06 | Search/filter | Make filters server-backed, composable and URL-shareable. |
 | 07 | Stock movement domain | Add receipt, sale, return and adjustment movement rules. |
 | 08 | Movement history | Show per-product ledger and global activity with pagination. |

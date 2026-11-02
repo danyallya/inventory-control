@@ -64,9 +64,22 @@ const productDraftInputSchema = z.object({
   reorderPoint: nonNegativeInteger,
 });
 
+const productEditInputSchema = z.object({
+  sku: productSkuSchema,
+  name: productDraftInputSchema.shape.name,
+  collection: productDraftInputSchema.shape.collection,
+  retailPrice: nonNegativeMoneyCents,
+  reorderPoint: nonNegativeInteger,
+});
+
 export const productDraftSchema = productDraftInputSchema.transform(({ unitCost, retailPrice, ...product }) => ({
   ...product,
   unitCostCents: unitCost,
+  retailCents: retailPrice,
+}));
+
+export const productEditDraftSchema = productEditInputSchema.transform(({ retailPrice, ...product }) => ({
+  ...product,
   retailCents: retailPrice,
 }));
 
@@ -74,6 +87,9 @@ export type ProductDraft = z.input<typeof productDraftSchema>;
 export type ValidatedProductDraft = z.output<typeof productDraftSchema>;
 export type ProductDraftField = keyof ProductDraft;
 export type ProductDraftErrors = Partial<Record<ProductDraftField, string>>;
+export type ProductEditDraft = z.input<typeof productEditDraftSchema>;
+export type ValidatedProductEditDraft = z.output<typeof productEditDraftSchema>;
+export type ProductEditDraftErrors = Partial<Record<keyof ProductEditDraft, string>>;
 
 export type ProductDraftValidation =
   | { success: true; data: ValidatedProductDraft }
@@ -107,4 +123,24 @@ export function validateProductDraft(
   }
 
   return { success: true, data: parsed.data };
+}
+
+export function validateProductEditDraft(input: unknown, existingSkus: readonly string[], currentSku: string):
+  | { success: true; data: ValidatedProductEditDraft }
+  | { success: false; errors: ProductEditDraftErrors } {
+  const parsed = productEditDraftSchema.safeParse(input);
+  if (!parsed.success) {
+    const errors: ProductEditDraftErrors = {};
+    for (const issue of parsed.error.issues) {
+      const field = issue.path[0];
+      if (typeof field === "string" && !(field in errors)) errors[field as keyof ProductEditDraft] = issue.message;
+    }
+    return { success: false, errors };
+  }
+
+  const duplicate = parsed.data.sku !== normalizeSku(currentSku)
+    && existingSkus.some((sku) => normalizeSku(sku) === parsed.data.sku);
+  return duplicate
+    ? { success: false, errors: { sku: "A product with this SKU already exists." } }
+    : { success: true, data: parsed.data };
 }

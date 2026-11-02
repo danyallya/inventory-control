@@ -49,9 +49,8 @@ export default function Home(){
   </Box>
   <AddProductDialog
     open={open}
-    existingSkus={items.map((item) => item.sku)}
     onClose={() => setOpen(false)}
-    onSave={(product: ValidatedProductDraft) => {
+    onSave={(product: ValidatedProductDraft & { id: string; createdAt: string; updatedAt: string }) => {
       const name = product.name;
       setItems((current) => [{
         name,
@@ -66,6 +65,7 @@ export default function Home(){
         retailCents: product.retailCents,
       }, ...current]);
       setOpen(false);
+      window.location.assign("/catalog");
     }}
   />
  </Box>;

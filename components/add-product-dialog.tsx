@@ -12,9 +12,8 @@ import {
 
 type AddProductDialogProps = {
   open: boolean;
-  existingSkus: readonly string[];
   onClose: () => void;
-  onSave: (product: ValidatedProductDraft) => void;
+  onSave: (product: ValidatedProductDraft & { id: string; createdAt: string; updatedAt: string }) => void;
 };
 
 const initialDraft: ProductDraft = {
@@ -37,11 +36,11 @@ const fieldLabels: Record<ProductDraftField, string> = {
   reorderPoint: "Reorder point",
 };
 
-export function AddProductDialog({ open, existingSkus, onClose, onSave }: AddProductDialogProps) {
+export function AddProductDialog({ open, onClose, onSave }: AddProductDialogProps) {
   const [draft, setDraft] = useState<ProductDraft>(initialDraft);
   const [fieldErrors, setFieldErrors] = useState<ProductDraftErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
-  const [checkingSku, setCheckingSku] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const reset = () => {
     setDraft(initialDraft);
@@ -50,7 +49,7 @@ export function AddProductDialog({ open, existingSkus, onClose, onSave }: AddPro
   };
 
   const close = () => {
-    if (checkingSku) return;
+    if (saving) return;
     reset();
     onClose();
   };
@@ -63,7 +62,7 @@ export function AddProductDialog({ open, existingSkus, onClose, onSave }: AddPro
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const result = validateProductDraft(draft, existingSkus);
+    const result = validateProductDraft(draft);
 
     if (!result.success) {
       setFieldErrors(result.errors);
@@ -71,30 +70,28 @@ export function AddProductDialog({ open, existingSkus, onClose, onSave }: AddPro
       return;
     }
 
-    setCheckingSku(true);
+    setSaving(true);
     setFormError(null);
 
     try {
-      if (process.env.NODE_ENV !== "production") {
-        const response = await fetch(`/api/products/sku-availability?sku=${encodeURIComponent(result.data.sku)}`, {
-          cache: "no-store",
-        });
-        if (!response.ok) throw new Error("SKU check failed");
-
-        const availability = (await response.json()) as { available?: boolean };
-        if (availability.available !== true) {
-          setFieldErrors({ sku: "A product with this SKU already exists." });
-          setFormError("Choose a different SKU before adding this product.");
-          return;
-        }
+      const response = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(draft),
+      });
+      const payload = await response.json() as { data?: { id: string; sku: string; name: string; collection: string; retailCents: number; quantity: number; reorderPoint: number; createdAt: string; updatedAt: string }; fields?: ProductDraftErrors; error?: string };
+      if (response.status === 400 || response.status === 409) {
+        setFieldErrors(payload.fields ?? {});
+        setFormError(payload.error ?? "Review the product fields before saving.");
+        return;
       }
-
-      onSave(result.data);
+      if (!response.ok || !payload.data) throw new Error("Product save failed");
+      onSave({ ...result.data, ...payload.data });
       reset();
     } catch {
-      setFormError("The local catalog could not confirm this SKU. No product was added; try again when it is available.");
+      setFormError("The local inventory could not save this product. No changes were made; check the development database and try again.");
     } finally {
-      setCheckingSku(false);
+      setSaving(false);
     }
   };
 
@@ -121,7 +118,7 @@ export function AddProductDialog({ open, existingSkus, onClose, onSave }: AddPro
         <DialogTitle id="add-product-title" sx={{ fontFamily: "Georgia" }}>Add a product</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={1}>
-            <Alert severity="info">Preview only: products added here stay in this browser session and are not saved to inventory.</Alert>
+          <Alert severity="info">Saved to the loopback development inventory only. Opening stock is recorded as an initial receipt; staff sign-in is not implemented yet.</Alert>
             {formError && <Alert severity="error" role="alert">{formError}</Alert>}
             {renderField("name")}
             {renderField("sku")}
@@ -137,9 +134,9 @@ export function AddProductDialog({ open, existingSkus, onClose, onSave }: AddPro
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button type="button" onClick={close} disabled={checkingSku}>Cancel</Button>
-          <Button type="submit" variant="contained" disabled={checkingSku} sx={{ bgcolor: "#292f31" }}>
-            {checkingSku ? "Checking SKU…" : "Add preview product"}
+          <Button type="button" onClick={close} disabled={saving}>Cancel</Button>
+          <Button type="submit" variant="contained" disabled={saving} sx={{ bgcolor: "#292f31" }}>
+            {saving ? "Saving…" : "Save product"}
           </Button>
         </DialogActions>
       </Box>
